@@ -36,7 +36,7 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const token = generateJWT({ id: userExist._id })
-    res.status(200).send({ token: token, mensaje: 'Login exitoso' });
+    res.status(200).send({ result: true, token: token, mensaje: 'Login exitoso' });
 }
 
 export const getUser = async (req: Request, res: Response) => {
@@ -45,7 +45,7 @@ export const getUser = async (req: Request, res: Response) => {
 
 export const updateProfile = async (req: Request, res: Response) => {
     try {
-        const { description, links } = req.body
+        const { description, tasks } = req.body
         const handle = slugify(req.body.handle, '')
         const handleExist = await User.findOne({ handle })
         if (handleExist && handleExist.email !== req.user.email) {
@@ -53,7 +53,7 @@ export const updateProfile = async (req: Request, res: Response) => {
         }
         req.user.handle = handle
         req.user.description = description
-        req.user.links = links
+        req.user.tasks = tasks
         await req.user.save()
         res.status(200).send('Perfil actualizado')
     } catch (error) {
